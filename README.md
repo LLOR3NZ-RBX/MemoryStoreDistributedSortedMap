@@ -14,6 +14,7 @@ To get a Distributed Sorted Map
     local MemoryStoreDistributedSortedMap = require(game.ServerScriptService.MemoryStoreDistributedSortedMap)
 ```
 2. Create a map with `MemoryStoreDistributedSortedMap.new(name, numPartitions)`
+
 Parameter | Description
 :--- | :---
 `name`: _string_ | The name of the sorted map.
