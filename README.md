@@ -16,7 +16,7 @@ local MemoryStoreDistributedSortedMap = require(<path to script>.MemoryStoreDist
 2. Create a map with 
 
 ```lua
-MemoryStoreDistributedSortedMap.new(name, numPartitions)
+MemoryStoreDistributedSortedMap(name, numPartitions)
 ```
 
 Parameter | Description
@@ -33,7 +33,7 @@ regular Memory Store Sorted Map - see
 ```lua
 local MemoryStoreDistributedSortedMap = require(game.ServerScriptService.MemoryStoreDistributedSortedMap)
 
-local map = MemoryStoreDistributedSortedMap.new("myMap", 100)
+local map = MemoryStoreDistributedSortedMap("myMap", 100)
 map:SetAsync("exp", 5, 300)
 print(map:GetAsync("exp"))
 ```
