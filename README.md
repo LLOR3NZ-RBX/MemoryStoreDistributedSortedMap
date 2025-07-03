@@ -31,7 +31,7 @@ regular Memory Store Sorted Map - see
 
 **Example:**
 ```lua
-local MemoryStoreDistributedSortedMap = require(<path to script>.MemoryStoreDistributedSortedMap)
+local MemoryStoreDistributedSortedMap = require(game.ServerScriptService.MemoryStoreDistributedSortedMap)
 
 local map = MemoryStoreDistributedSortedMap.new("myMap", 100)
 map:SetAsync("exp", 5, 300)
@@ -39,14 +39,16 @@ print(map:GetAsync("exp"))
 ```
 
 ## Limits
-- #Items: ~ 100000 * (# partitions)
-- Size: ~ 100 kb * (# partitions)
+Limit Type | Limit
+:--- | :---
+`# Items` | #partitions * 100000
+`Size` | #partitions * ~100 kb
 
 ## Request Units
 Function | Request Unit(s)
 :--- | :---
 `GetAsync()` | 1
-`GetRangeAsync()` | # items * #partitions
+`GetRangeAsync()` | count * #partitions
 `GetSizeAsync()` | #partitions
 `RemoveAsync()` | 1
 `SetAsync()` | 2
