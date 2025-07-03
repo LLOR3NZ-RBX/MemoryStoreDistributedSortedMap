@@ -48,7 +48,7 @@ Limit Type | Limit
 Function | Request Unit(s)
 :--- | :---
 `GetAsync()` | 1
-`GetRangeAsync()` | #partitions count
+`GetRangeAsync()` | #partitions * count
 `GetSizeAsync()` | #partitions
 `RemoveAsync()` | 1
 `SetAsync()` | 2
