@@ -41,8 +41,8 @@ print(map:GetAsync("exp"))
 ## Limits
 Limit Type | Limit
 :--- | :---
-`# Items` | #partitions * 100000
-`Size` | #partitions * ~100 kb
+`# Items` | ~ #partitions * 100000
+`Size` | ~ #partitions * 100 kb
 
 ## Request Units
 Function | Request Unit(s)
