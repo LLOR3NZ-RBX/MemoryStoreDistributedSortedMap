@@ -53,3 +53,6 @@ Function | Request Unit(s)
 `RemoveAsync()` | 1
 `SetAsync()` | 2
 `UpdateAsync()` | >2 
+
+## Acknowledgements
+- https://github.com/Tieske/binaryheap.lua
