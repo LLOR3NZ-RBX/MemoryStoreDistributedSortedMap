@@ -8,26 +8,35 @@ act as a single map.
 
 ## Interface
 
-To get a Distributed Sorted Map
+To use a Distributed Sorted Map:
 1. Import the module with 
 ```lua
-    local MemoryStoreDistributedSortedMap = require(game.ServerScriptService.MemoryStoreDistributedSortedMap)
+local MemoryStoreDistributedSortedMap = require(<path to script>.MemoryStoreDistributedSortedMap)
 ```
-2. Create a map with `MemoryStoreDistributedSortedMap.new(name, numPartitions)`
+2. Create a map with 
+
+```lua
+MemoryStoreDistributedSortedMap.new(name, numPartitions)
+```
 
 Parameter | Description
 :--- | :---
 `name`: _string_ | The name of the sorted map.
-`numPartitions`: _number_ | The number of the partitions to create in the sorted
-map.
+`numPartitions`: _number_ | The number of the partitions to create in the sorted map.
+
+After getting a Distributed Sorted Map, the method interface is the same as a
+regular Memory Store Sorted Map - see
+[API](https://create.roblox.com/docs/reference/engine/classes/MemoryStoreSortedMap#Summary).
+
 
 **Example:**
 ```lua
-    local map = MemoryStoreDistributedSortedMap.new("myMap", 100)
-```
+local MemoryStoreDistributedSortedMap = require(<path to script>.MemoryStoreDistributedSortedMap)
 
-After getting a Distributed Sorted Map, the method interface is the same as a
-regular Memory Store Sorted Map - see [API](https://create.roblox.com/docs/reference/engine/classes/MemoryStoreSortedMap#Summary).
+local map = MemoryStoreDistributedSortedMap.new("myMap", 100)
+map:SetAsync("exp", 5, 300)
+print(map:GetAsync("exp"))
+```
 
 ## Limits
 - #Items: ~ 100000 * (# partitions)
