@@ -41,15 +41,15 @@ print(map:GetAsync("exp"))
 ## Limits
 Limit Type | Limit
 :--- | :---
-`# Items` | ~ #partitions * 100000
-`Size` | ~ #partitions * 100 kb
+`# Items` | ~ `numPartitions` * 100000
+`Size` | ~ `numPartitions` * 100 kb
 
 ## Request Units
 Function | Request Unit(s)
 :--- | :---
 `GetAsync()` | 1
-`GetRangeAsync()` | #partitions * count
-`GetSizeAsync()` | #partitions
+`GetRangeAsync()` | `numPartitions` * `count`
+`GetSizeAsync()` | `numPartitions`
 `RemoveAsync()` | 1
 `SetAsync()` | 2
 `UpdateAsync()` | >2 
