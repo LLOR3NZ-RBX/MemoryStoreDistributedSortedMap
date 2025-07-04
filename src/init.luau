@@ -29,9 +29,10 @@ local MemoryStoreDistributedSortedMap = {}
 	@return MemoryStoreDistributedSortedMap
 ]]
 function MemoryStoreDistributedSortedMap.new(name: string, numPartitions: number): Types.MemoryStoreDistributedSortedMap
+	numPartitions = numPartitions or DEFAULT_NUM_PARTITIONS
 	local map = {
 		name = name,
-		numPartitions = math.floor(numPartitions) or DEFAULT_NUM_PARTITIONS
+		numPartitions = math.floor(numPartitions)
 	}
 	setmetatable(map, { __index = MemoryStoreDistributedSortedMap })
 	
