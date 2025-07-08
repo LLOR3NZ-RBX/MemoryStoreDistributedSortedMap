@@ -17,6 +17,7 @@ local Types = require(script.Types)
 
 -- Constants
 local DEFAULT_NUM_PARTITIONS = 16
+local DEFAULT_APPROXIMATE_NUM_PARTITIONS = 1
 
 -- Distributed Sorted Map Class
 local MemoryStoreDistributedSortedMap = {}
@@ -28,13 +29,15 @@ local MemoryStoreDistributedSortedMap = {}
 		if a decimal is provided. Default is 16.
 	@return MemoryStoreDistributedSortedMap
 ]]
-function MemoryStoreDistributedSortedMap.new(name: string, numPartitions: number): Types.MemoryStoreDistributedSortedMap
+function MemoryStoreDistributedSortedMap.new(name: string, numPartitions: number?): Types.MemoryStoreDistributedSortedMap
 	numPartitions = numPartitions or DEFAULT_NUM_PARTITIONS
 	local map = {
 		name = name,
 		numPartitions = math.floor(numPartitions)
 	}
 	setmetatable(map, { __index = MemoryStoreDistributedSortedMap })
+	
+	math.randomseed(os.time())
 	
 	return map :: Types.MemoryStoreDistributedSortedMap
 end
@@ -75,15 +78,53 @@ end
 
 --[[
 	Gets the size of the distributed sorted map.
+	@param approximated (optional boolean): If set to true, the count will be approximated. Default is false.
+	@param numPartitionsToApproximate (optional number): The number of partitions to use when approximating, trunacated to the nearest integer
+		if a decimal is provided. Default is 1.
 	@return size (number): The size of the sorted map.
 ]]
-function MemoryStoreDistributedSortedMap:GetSizeAsync(): number
+function MemoryStoreDistributedSortedMap:GetSizeAsync(approximated: boolean?, numPartitionsToApproximate: number?): number
 	local totalSize = 0
-	for i = 1, self.numPartitions do
-		local mapPartition = Partitions.getDistributedMapPartitionByIndex(self, i)
-		totalSize += mapPartition:GetSizeAsync()
+	
+	if not approximated then
+		-- get real count
+		for i = 1, self.numPartitions do
+			local mapPartition = Partitions.getDistributedMapPartitionByIndex(self, i)
+			totalSize += mapPartition:GetSizeAsync()
+		end
+	else 
+		if numPartitionsToApproximate and numPartitionsToApproximate > self.numPartitions then
+			error("`numPartitionsToApproximate` cannot be greater than the number of partitions in the distributed sorted map.")
+		end
+		
+		-- get approximate count
+		local partitionsUsed = {}
+		for i = 1, self.numPartitions do
+			table.insert(partitionsUsed, false)
+		end
+		
+		-- sample partitions for size
+		local partitionsScanned = 0
+		numPartitionsToApproximate = numPartitionsToApproximate or DEFAULT_APPROXIMATE_NUM_PARTITIONS
+		numPartitionsToApproximate = math.floor(numPartitionsToApproximate)
+		while partitionsScanned < numPartitionsToApproximate do
+			local randPartition = math.random(1, self.numPartitions)
+			
+			-- ensure we are getting a unique partition
+			if not partitionsUsed[randPartition] then
+				partitionsUsed[randPartition] = true
+				
+				-- add the size
+				local mapPartition = Partitions.getDistributedMapPartitionByIndex(self,randPartition)
+				totalSize += mapPartition:GetSizeAsync()
+				partitionsScanned += 1
+			end
+		end
+		
+		-- correct for proportion
+		totalSize *= self.numPartitions / numPartitionsToApproximate
 	end
-	return totalSize
+	return math.round(totalSize)
 end
 
 --[[
@@ -117,7 +158,7 @@ end
 	@return value (any): The value stored at the key.
 	@return sortKey (any): The sort key used to sort the key at the value.
 ]]
-function MemoryStoreDistributedSortedMap:UpdateAsync(key: string, transformFunction: Types.Function, expiration: number)
+function MemoryStoreDistributedSortedMap:UpdateAsync(key: string, transformFunction: Types.Function, expiration: number): (any, any)
 	local mapPartition = Partitions.getDistributedMapPartition(self, key)
 	return mapPartition:UpdateAsync(key, transformFunction, expiration)
 end

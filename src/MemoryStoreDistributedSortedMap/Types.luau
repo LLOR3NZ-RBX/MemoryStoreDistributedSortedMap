@@ -7,12 +7,17 @@ export type MemoryStoreDistributedSortedMap = {
 	name: string,
 	numPartitions: number,
 	
-	GetAsync: Function,
-	GetRangeAsync: Function,
-	GetSizeAsync: Function,
-	RemoveAsync: Function,
-	SetAsync: Function,
-	UpdateAsync: Function
+	GetAsync: (key: string) -> SortedMapItem,
+	GetRangeAsync: (
+		direction: Enum.SortDirection,
+		count: number, 
+		exclusiveLowerBound: SortedMapBound, 
+		exclusiveUpperBound: SortedMapBound) 
+	-> { SortedMapItem },
+	GetSizeAsync: (approximate: boolean?, numPartitionsToApproximate: number?) -> number,
+	RemoveAsync: (key: string) -> (),
+	SetAsync: (key: string, value: any, expiration: number, sortKey: any) -> boolean,
+	UpdateAsync: (key: string, transformFunction: Function, expiration: number) -> (string, string)
 }
 
 -- A SortedMapItem
