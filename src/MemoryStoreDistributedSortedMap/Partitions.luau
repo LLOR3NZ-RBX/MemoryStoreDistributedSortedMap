@@ -38,7 +38,7 @@ function Partitions.getDistributedMapPartition(distributedMap: Types.MemoryStore
 	local hashedMapName = djb2(distributedMap.name)
 	local hashedKeyName = djb2(key)
 	local mapPartitionIndex = hashedKeyName % distributedMap.numPartitions + 1
-	local mapPartitionName = distributedMap.name .. '-' .. hashedMapName .. '-' .. mapPartitionIndex
+	local mapPartitionName = distributedMap.name .. '-' .. hashedMapName .. '-' .. mapPartitionIndex .. '/' .. distributedMap.numPartitions
 	return MemoryStoreService:GetSortedMap(mapPartitionName)
 end
 
@@ -50,7 +50,7 @@ end
 ]]
 function Partitions.getDistributedMapPartitionByIndex(distributedMap: Types.MemoryStoreDistributedSortedMap, index: number): MemoryStoreSortedMap
 	local hashedMapName = djb2(distributedMap.name)
-	local mapPartitionName = distributedMap.name .. '-' .. hashedMapName .. '-' .. index
+	local mapPartitionName = distributedMap.name .. '-' .. hashedMapName .. '-' .. index .. '/' .. distributedMap.numPartitions
 	return MemoryStoreService:GetSortedMap(mapPartitionName)
 end
 

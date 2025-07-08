@@ -18,18 +18,27 @@ local MemoryStoreDistributedSortedMap = require(<path to script>.MemoryStoreDist
 2. Create a map with 
 
 ```lua
-MemoryStoreDistributedSortedMap(name, numPartitions)
+MemoryStoreDistributedSortedMap(name: string, numPartitions: number?)
 ```
 
 Parameter | Description
 :--- | :---
 `name`: _string_ | The name of the sorted map.
-`numPartitions`: _number_ | The number of the partitions to create in the sorted map.
+`numPartitions`: _number?_ | The number of the partitions to create in the sorted map. If not provided, defaults to 16.
 
 After getting a Distributed Sorted Map, the method interface is the same as a
 regular Memory Store Sorted Map - see
-[API](https://create.roblox.com/docs/reference/engine/classes/MemoryStoreSortedMap#Summary).
+[API](https://create.roblox.com/docs/reference/engine/classes/MemoryStoreSortedMap#Summary)
+- with one exception.
 
+```lua
+MemoryStoreDistributedSortedMap:GetSizeAsync(approximate: boolean?, numPartitionsToApproximate: number?)
+```
+
+Parameter | Description
+:--- | :---
+`approximate`: _string?_ | If the size should be approximated. If false or not provided, it will not approximate, and will scan all partitions.
+`numPartitionsToApproximate`: _number?_ | The number of the partitions to sample, if `approximate` is true. If not provided, defaults to 1.
 
 **Example:**
 ```lua
@@ -50,8 +59,8 @@ Limit Type | Limit
 Function | Request Unit(s)
 :--- | :---
 `GetAsync()` | 1
-`GetRangeAsync()` | `numPartitions` * `count`
-`GetSizeAsync()` | `numPartitions`
+`GetRangeAsync()` | <`numPartitions` * `count`
+`GetSizeAsync()` | `numPartitionsToApproximate` or `numPartitions`
 `RemoveAsync()` | 1
 `SetAsync()` | 2
 `UpdateAsync()` | >2 
