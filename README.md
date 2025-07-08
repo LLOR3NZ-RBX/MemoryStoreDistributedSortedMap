@@ -26,10 +26,9 @@ Parameter | Description
 `name`: _string_ | The name of the sorted map.
 `numPartitions`: _number?_ | The number of the partitions to create in the sorted map. If not provided, defaults to 16.
 
-After getting a Distributed Sorted Map, the method interface is the same as a
+After getting a Distributed Sorted Map, the method interface is completely backwards compatible with a
 regular Memory Store Sorted Map - see
-[API](https://create.roblox.com/docs/reference/engine/classes/MemoryStoreSortedMap#Summary)
-- with one exception.
+[API](https://create.roblox.com/docs/reference/engine/classes/MemoryStoreSortedMap#Summary). This module adds extra functionality to a single method - `GetSizeAsync`.
 
 ```lua
 MemoryStoreDistributedSortedMap:GetSizeAsync(approximate: boolean?, numPartitionsToApproximate: number?)
@@ -62,7 +61,7 @@ Function | Request Unit(s)
 `GetRangeAsync()` | <`numPartitions` * `count`
 `GetSizeAsync()` | `numPartitionsToApproximate` or `numPartitions`
 `RemoveAsync()` | 1
-`SetAsync()` | 2
+`SetAsync()` | 1
 `UpdateAsync()` | >2 
 
 ## Acknowledgements
